@@ -1,4 +1,4 @@
-import { AboutUs, Docter } from "../assets/index";
+import { AboutUs, Doctor } from "../assets/index";
 export default function AboutPage() {
   return (
     <>
@@ -49,7 +49,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="flex justify-center  relative">
-            <img src={Docter} alt="" className=" lg:absolute lg:bottom-0 " />
+            <img src={Doctor} alt="" className=" lg:absolute lg:bottom-0 " />
           </div>
         </div>
       </section>

@@ -60,7 +60,7 @@ export default function Header() {
           className="bg-primary text-white px-8 py-2 text-xl font-semibold hover:bg-primary-dark transition-all rounded-lg block lg:hidden   absolute left-5 right-5 bottom-40 text-center"
           onClick={toggleMenu}
         >
-          Docter Appointment
+          Doctor Appointment
         </Link>
       </ul>
 
@@ -68,7 +68,7 @@ export default function Header() {
         to="/booking"
         className="bg-primary text-white px-8 py-2 text-xl font-semibold hover:bg-primary-dark transition-all rounded-lg hidden lg:block"
       >
-        Docter Appointment
+        Doctor Appointment
       </Link>
 
       <button className="lg:hidden" onClick={toggleMenu}>

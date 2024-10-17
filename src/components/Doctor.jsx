@@ -1,12 +1,12 @@
-import { BookingDocter } from "../assets/index";
+import { BookingDoctor as BookingDoctor } from "../assets/index";
 
-export default function Docter() {
+export default function Doctor() {
   return (
     <>
       <div className="bg-white z-20 w-full flex md:flex-row flex-col md:gap-14 gap-5 p-5 sm:px-8 sm:py-6  items-center  md:items-start lg:items-center rounded-2xl shadow-md ">
         <div className=" ">
           <img
-            src={BookingDocter}
+            src={BookingDoctor}
             alt="doctor"
             className="lg:h-[290px] h-[200px]  object-cover lg:aspect-square rounded-2xl  "
           />

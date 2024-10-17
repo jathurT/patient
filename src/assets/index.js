@@ -6,8 +6,8 @@ import Pattern_up from "./images/Pattern_up.png";
 import ServicesBanner from "./images/ServicesBanner.png";
 import ContactusBanner from "./images/ContactusBanner.png";
 import AboutUs from "./images/AboutUs.jpg";
-import Docter from "./images/Docter.png";
-import BookingDocter from "./images/BookingDocter.png";
+import Doctor from "./images/Doctor.png";
+import BookingDoctor from "./images/BookingDoctor.png";
 export {
   Logo,
   HeroImage,
@@ -17,6 +17,6 @@ export {
   ServicesBanner,
   ContactusBanner,
   AboutUs,
-  Docter,
-  BookingDocter,
+  Doctor,
+  BookingDoctor,
 };

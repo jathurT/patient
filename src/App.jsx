@@ -10,6 +10,7 @@ import ContactPage from "./pages/ContactPage";
 import Layout from "./Layout";
 import BookingPage from "./pages/BookingPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import BookingFormPage from "./pages/BookingFormPage";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:8080";
 
@@ -25,7 +26,7 @@ function App() {
         { path: "services", element: <ServicesPage /> },
         { path: "contact", element: <ContactPage /> },
         { path: "booking", element: <BookingPage /> },
-        // { path: "booking/:id", element: <BookingDetailsPage /> },
+        { path: "booking/:id", element: <BookingFormPage /> },
         // { path: "booking/", element: <ConfirmationPage /> },
       ],
     },
