@@ -25,9 +25,8 @@ function App() {
         { path: "services", element: <ServicesPage /> },
         { path: "contact", element: <ContactPage /> },
         { path: "booking", element: <BookingPage /> },
-        {
-          path: "booking/:id",
-        },
+        // { path: "booking/:id", element: <BookingDetailsPage /> },
+        // { path: "booking/", element: <ConfirmationPage /> },
       ],
     },
   ]);
