@@ -1,11 +1,28 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { CiBookmark, CiLock } from "react-icons/ci";
 
 export default function Schedule({ schedule }) {
   const scheduleTheme = {
-    Available: "text-green-500 bg-green-100",
-    Unavailable: "text-red-500 bg-red-100",
-    Closed: "text-purple-500 bg-purple-100",
+    statusbarStyle: {
+      Available: "text-green-500 bg-green-100",
+      Unavailable: "text-red-500 bg-red-100",
+      Closed: "text-purple-500 bg-purple-100",
+    },
+    linkStyle: {
+      Available: "cursor-pointer hover:opacity-50 duration-300",
+      Unavailable: "cursor-not-allowed",
+      Closed: "cursor-not-allowed",
+    },
+    bookingButtonLogo: {
+      Available: <CiBookmark />,
+      Unavailable: <CiLock />,
+      Closed: <CiLock />,
+    },
+    link: {
+      Available: `/booking/${schedule.id}`,
+      Unavailable: "/booking",
+      Closed: "/booking",
+    },
   };
   return (
     <>
@@ -27,13 +44,12 @@ export default function Schedule({ schedule }) {
           </div>
           <div className="flex flex-col gap-2 md:flex-row md:gap-10 md:items-center ">
             <Link
-              to={`${
-                schedule.status == "Available" ? `/booking/${schedule.id}` : "#"
-              }`}
-              disabled={schedule.status == "Unavailable"}
-              className="w-[85px] md:h-10 md:py-3 py-1 bg-primary text-white rounded-lg    flex items-center justify-center gap-1"
+              to={`${scheduleTheme.link[schedule.status]}`}
+              className={`w-[85px] md:h-10 md:py-3 py-1 bg-primary text-white rounded-lg 
+                          flex items-center justify-center gap-1 
+                          ${scheduleTheme.linkStyle[schedule.status]} `}
             >
-              {schedule.status == "Available" ? <CiBookmark /> : <CiLock />}
+              {scheduleTheme.bookingButtonLogo[schedule.status]}
 
               <p className="text-xs">Book</p>
             </Link>

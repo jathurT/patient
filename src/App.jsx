@@ -11,6 +11,7 @@ import Layout from "./Layout";
 import BookingPage from "./pages/BookingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import BookingFormPage from "./pages/BookingFormPage";
+import ConfirmationPage from "./pages/ConfirmationPage";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:8080";
 
@@ -27,7 +28,7 @@ function App() {
         { path: "contact", element: <ContactPage /> },
         { path: "booking", element: <BookingPage /> },
         { path: "booking/:id", element: <BookingFormPage /> },
-        // { path: "booking/", element: <ConfirmationPage /> },
+        { path: "booking/submit", element: <ConfirmationPage /> },
       ],
     },
   ]);
