@@ -1,6 +1,7 @@
 import { ServicesBanner } from "../assets/index";
 import Faq from "../components/Faq";
 import Services from "../components/Services";
+import Try3 from "../components/Try3";
 
 export default function ServicesPage() {
   return (
@@ -23,7 +24,7 @@ export default function ServicesPage() {
       </section>
 
       <section className=" mt-32 px-5">
-        <Faq />
+        <Try3 />
       </section>
     </>
   );

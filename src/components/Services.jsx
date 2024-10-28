@@ -51,7 +51,7 @@ export default function Services() {
       {services.map((service, index) => (
         <div
           key={index}
-          className="flex flex-col bg-white aspect-3/4 rounded-3xl  p-5 relative"
+          className="flex flex-col bg-white aspect-3/4 rounded-3xl  p-5 relative shadow-lg border border-gray-200 "
         >
           <img
             src={service.image}

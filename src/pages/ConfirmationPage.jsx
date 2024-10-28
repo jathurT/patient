@@ -1,6 +1,55 @@
 import { HiCheck } from "react-icons/hi";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Loader from "../components/Loader";
+
+import axios from "axios";
 
 export default function ConfirmationPage() {
+  const { id } = useParams();
+  const referenceId = parseInt(id, 10);
+  const [booking, setBooking] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/bookings/${referenceId}`
+        );
+        if (response.status === 200) {
+          setBooking(response.data);
+        }
+      } catch (err) {
+        if (err.response && err.response.status === 404) {
+          setError("Booking not found.");
+        } else {
+          setError("Error fetching booking data.");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSchedule();
+  }, [referenceId]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
   return (
     <>
       <div className="mt-[92px] h-[500px]">
@@ -24,12 +73,14 @@ export default function ConfirmationPage() {
                 <ul className="flex flex-col gap-3 pb-5">
                   <li className="flex justify-between">
                     <div className="text-gray-500">Ref Number</div>
-                    <div className="text-black font-semibold">000085752257</div>
+                    <div className="text-black font-semibold">
+                      {booking.referenceId}
+                    </div>
                   </li>
                   <li className="flex justify-between">
                     <div className="text-gray-500">Payment Time</div>
                     <div className="text-black font-semibold">
-                      25-02-2023, 13:22:16
+                      {booking.dateTime}
                     </div>
                   </li>
                   <li className="flex justify-between">
@@ -41,7 +92,7 @@ export default function ConfirmationPage() {
                   <li className="flex justify-between">
                     <div className="text-gray-500">Sender Name</div>
                     <div className="text-black font-semibold">
-                      Antonio Roberto
+                      {booking.name}
                     </div>
                   </li>
                   <li className="flex justify-between">

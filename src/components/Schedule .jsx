@@ -33,14 +33,14 @@ export default function Schedule({ schedule }) {
               {schedule.date}
             </div>
             <div className=" text-teal-600 ">
-              {schedule.day_of_week.slice(0, 3)} {schedule.time}
+              {schedule.dayOfWeek.slice(0, 3)} {/*{schedule.time}  */}
             </div>
           </div>
           <div className="flex flex-col gap-1 items-center w-28 sm:w-auto   ">
             <div className=" text-gray-500 text-center ">
               active appointment
             </div>
-            <div className="  text-primary">{schedule.active_appointment}</div>
+            <div className="  text-primary">{schedule.bookings.length}</div>
           </div>
           <div className="flex flex-col gap-2 md:flex-row md:gap-10 md:items-center ">
             <Link
@@ -55,7 +55,7 @@ export default function Schedule({ schedule }) {
             </Link>
             <p
               className={`w-[85px]  text-center md:h-10 py-1 md:py-3   rounded-lg text-xs ${
-                scheduleTheme[schedule.status]
+                scheduleTheme.statusbarStyle[schedule.status]
               }`}
             >
               {schedule.status}

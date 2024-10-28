@@ -36,7 +36,7 @@ export default function Header() {
       </Link>
 
       <ul
-        className={`flex lg:flex-row flex-col gap-5 text-xl absolute duration-200 bg-white lg:items-center ${
+        className={`flex lg:flex-row flex-col gap-5  absolute duration-200 bg-white lg:items-center ${
           isMenuOpen ? "top-[92px]" : "top-[-1500px]"
         } left-0 w-full h-screen lg:h-auto lg:static lg:w-auto lg:bg-transparent py-5 lg:py-0 pl-5 lg:pl-0`}
       >
@@ -56,20 +56,35 @@ export default function Header() {
           </li>
         ))}
         <Link
-          to="/booking"
-          className="bg-primary text-white px-8 py-2 text-xl font-semibold hover:bg-primary-dark transition-all rounded-lg block lg:hidden   absolute left-5 right-5 bottom-40 text-center"
+          to="/myBooking"
+          className="bg-primary text-white px-8 py-2   hover:bg-primary-dark transition-all rounded-lg block lg:hidden   absolute left-5 right-5 bottom-[205px] text-center"
           onClick={toggleMenu}
+        >
+          My Booking
+        </Link>
+        <Link
+          to="/booking"
+          className="bg-primary text-white px-8 py-2   hover:bg-primary-dark transition-all rounded-lg block lg:hidden   absolute left-5 right-5 bottom-40 text-center"
+          onClick={toggleMenu}
+        >
+          Book Now
+        </Link>
+      </ul>
+      <div className="flex items-center  font-semibold gap-5 ">
+        <Link
+          to="/myBooking"
+          className=" text-primary px-8 py-[6px]  hover:text-gray-500 transition-all rounded-lg hidden lg:block  border-2 border-primary hover:border-gray-500"
+        >
+          My Booking
+        </Link>
+
+        <Link
+          to="/booking"
+          className="bg-primary text-white px-8 py-2  hover:bg-primary-dark transition-all rounded-lg hidden lg:block"
         >
           Doctor Appointment
         </Link>
-      </ul>
-
-      <Link
-        to="/booking"
-        className="bg-primary text-white px-8 py-2 text-xl font-semibold hover:bg-primary-dark transition-all rounded-lg hidden lg:block"
-      >
-        Doctor Appointment
-      </Link>
+      </div>
 
       <button className="lg:hidden" onClick={toggleMenu}>
         <ion-icon name={isMenuOpen ? "close" : "menu"}></ion-icon>

@@ -12,8 +12,10 @@ import BookingPage from "./pages/BookingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import BookingFormPage from "./pages/BookingFormPage";
 import ConfirmationPage from "./pages/ConfirmationPage";
+import MyBookingPage from "./pages/MyBookingPage";
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:8080";
+
+axios.defaults.baseURL = "http://localhost:8000";
 
 function App() {
   const router = createBrowserRouter([
@@ -28,7 +30,8 @@ function App() {
         { path: "contact", element: <ContactPage /> },
         { path: "booking", element: <BookingPage /> },
         { path: "booking/:id", element: <BookingFormPage /> },
-        { path: "booking/submit", element: <ConfirmationPage /> },
+        { path: "booking/submit/:id", element: <ConfirmationPage /> },
+        { path: "myBooking", element: <MyBookingPage /> },
       ],
     },
   ]);

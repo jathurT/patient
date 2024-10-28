@@ -1,3 +1,5 @@
+import { AboutUs, Doctor } from "../assets/index";
+
 const dummySchedule = [
   {
     id: 1,
