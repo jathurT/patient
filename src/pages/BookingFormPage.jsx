@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { dummySchedule } from "../data/index";
 
-import BookingForm from "../components/BookingForm";
+import BookingForm1 from "../components/BookingForm1";
 import Doctor from "../components/Doctor";
 import Schedule from "../components/Schedule ";
 import Loader from "../components/Loader";
@@ -71,7 +71,7 @@ export default function BookingFormPage() {
           <Schedule schedule={schedule} />
           {schedule.status === "Available" ? (
             <>
-              <BookingForm
+              <BookingForm1
                 scheduleId={schedule.id}
                 setIsLoading={setIsLoading}
                 setError={setError}

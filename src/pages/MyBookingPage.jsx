@@ -3,10 +3,8 @@ import { FaUser, FaPhoneAlt } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
 import axios from "axios";
 import jsPDF from "jspdf";
-import PdfDownloader from "../components/PdfDownloader";
 
-function BookingForm() {
-  // Separate states for each form field
+export default function MyBookingPage() {
   const [referenceNumber, setReferenceNumber] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState({
@@ -80,7 +78,6 @@ function BookingForm() {
         );
 
         setResponseData(response.data);
-        console.log("Data fetched successfully:", response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         setErrors({
@@ -99,7 +96,7 @@ function BookingForm() {
             Search Booking
           </h2>
           <label className="flex items-center space-x-2">
-            <i className="fas fa-user text-gray-400"></i>
+            <FaUser />
             <input
               type="text"
               value={referenceNumber}
@@ -116,7 +113,7 @@ function BookingForm() {
         </div>
         <div className="mb-4">
           <label className="flex items-center space-x-2">
-            <i className="fas fa-phone-alt text-gray-400"></i>
+            <FaPhoneAlt />
             <input
               type="text"
               value={phone}
@@ -133,25 +130,22 @@ function BookingForm() {
           type="submit"
           className="w-full bg-primary hover:bg-opacity-90 text-white py-2 rounded flex items-center justify-center space-x-2"
         >
-          <i className="fas fa-search"></i>
+          <IoSearch />
           <span>Search</span>
         </button>
         {errors.form && (
           <p className="text-red-500 text-sm mt-4">{errors.form}</p>
         )}
         <div className="mt-4 text-sm text-gray-500">
-          <p className="text-primary">
-            *Only 20 attempts are allowed per booking
-          </p>
-          <p className="text-primary">
+          <p className="">
             *Please use the local phone number entered under patient’s details.
             This feature is not available for foreign numbers.
           </p>
         </div>
       </form>
-      {true && (
+      {responseData && (
         <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-          <h3 className="text-primary font-bold">Fetched Data:</h3>
+          <h3 className="text-primary font-bold">Booking details</h3>
           <pre className="text-sm text-gray-700">
             {JSON.stringify(responseData, null, 2)}
           </pre>
@@ -161,5 +155,3 @@ function BookingForm() {
     </div>
   );
 }
-
-export default BookingForm;
