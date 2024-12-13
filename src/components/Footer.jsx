@@ -58,20 +58,20 @@ export default function Footer() {
 
   return (
     <>
-      <footer className=" w-full  xl:px-[120px]  mx-auto grid  md:grid-cols-1 lg:grid-cols-5 gap-20 lg:gap-5 pt-20 pb-20 lg:pb-40  text-white px-5 bg-primary mt-32">
-        <div className="flex flex-col gap-10 col-span-1 lg:col-span-2  items-center lg:items-start">
+      <footer className=" w-full  xl:px-[120px]  mx-auto grid  md:grid-cols-1 lg:grid-cols-5 gap-20 lg:gap-5 pt-20 pb-20 lg:pb-20  text-white px-5 bg-primary mt-32">
+        <div className="flex flex-col gap-8 col-span-1 lg:col-span-2  items-center lg:items-start">
           <div className="flex items-center justify-center gap-1  duration-300">
             <img src={Logo} alt="Logo" />
             <span className="font-bold text-2xl pl-1 ">DN Dental Clinic</span>
           </div>
-          <p className="pl-3 text-xl lg:max-w-[300px] text-center lg:text-start  hidden lg:inline-block ">
+          <p className="pl-3  lg:max-w-[300px] text-center lg:text-start  hidden lg:inline-block ">
             Copyright © DN Dental Clinic | All Rights Reserved{" "}
           </p>
         </div>
 
-        <div className=" flex flex-col items-center lg:items-start gap-10  col-span-1  ">
-          <h1 className="font-bold text-2xl py-2 ">Pages</h1>
-          <ul className="flex flex-col  items-center lg:items-start gap-4 text-xl">
+        <div className=" flex flex-col items-center lg:items-start gap-8  col-span-1  ">
+          <h1 className="font-bold text-xl py-2 ">Pages</h1>
+          <ul className="flex flex-col  items-center lg:items-start gap-4 ">
             {navLinks.map((navLink, index) => (
               <li key={index}>
                 <Link
@@ -85,9 +85,9 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="flex flex-col gap-10 items-center lg:items-start col-span-1 ">
-          <h1 className="font-bold text-2xl py-2">Follow Us</h1>
-          <ul className="flex flex-col  lg:items-start gap-4 text-xl">
+        <div className="flex flex-col gap-8 items-center lg:items-start col-span-1 ">
+          <h1 className="font-bold text-xl py-2">Follow Us</h1>
+          <ul className="flex flex-col  lg:items-start gap-4 ">
             {socialLinks.map((socialLink, index) => (
               <li key={index}>
                 <a
@@ -103,9 +103,9 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="flex flex-col items-center lg:items-start gap-10   col-span-1  ">
-          <h1 className="font-bold text-2xl py-2">Contact Us</h1>
-          <ul className="flex flex-col items-center lg:items-start gap-4 text-xl text-center lg:text-start">
+        <div className="flex flex-col items-center lg:items-start gap-8   col-span-1  ">
+          <h1 className="font-bold text-xl py-2">Contact Us</h1>
+          <ul className="flex flex-col items-center lg:items-start gap-4  text-center lg:text-start">
             {contactUs.map((contact, index) => (
               <li key={index}>{contact.title}</li>
             ))}
@@ -113,7 +113,7 @@ export default function Footer() {
         </div>
         <div className=""></div>
       </footer>
-      <p className="pl-3 text-xl lg:max-w-[300px] text-center lg:text-start lg:hidden text-primary py-5">
+      <p className="pl-3  lg:max-w-[300px] text-center lg:text-start lg:hidden text-primary py-5">
         Copyright © DN Dental Clinic | All Rights Reserved{" "}
       </p>
     </>

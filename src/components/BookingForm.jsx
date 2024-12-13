@@ -28,6 +28,7 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
     console.log("Form Data Submitted:", formData);
   };
 
+  const formIsValid = () => {};
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = {

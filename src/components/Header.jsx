@@ -57,7 +57,7 @@ export default function Header() {
         ))}
         <Link
           to="/myBooking"
-          className="bg-primary text-white px-8 py-2   hover:bg-primary-dark transition-all rounded-lg block lg:hidden   absolute left-5 right-5 bottom-[205px] text-center"
+          className="text-primary  px-8 py-2   hover:bg-primary-dark transition-all rounded-lg block lg:hidden   absolute left-5 right-5 bottom-[205px] text-center border-2 border-primary hover:border-gray-500"
           onClick={toggleMenu}
         >
           My Booking

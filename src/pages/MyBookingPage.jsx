@@ -87,8 +87,8 @@ export default function MyBookingPage() {
     doc.text(`:    ${bookingDetails.email}`, 60, 115);
     doc.text(`Payment Method`, 20, 125);
     doc.text(`:    Bank Transfer`, 60, 125);
-    doc.text(`Schedule Date`, 20, 135);
-    doc.text(`:    ${bookingDetails.schedule.date}`, 60, 135);
+    // doc.text(`Schedule Date`, 20, 135);
+    // doc.text(`:    ${bookingDetails.schedule.date}`, 60, 135);
     doc.save("booking_confirmation.pdf");
   };
 
@@ -251,10 +251,10 @@ export default function MyBookingPage() {
               </li>
 
               <li className="flex justify-between">
-                <div className="text-gray-500">Schedule Date</div>
+                {/* <div className="text-gray-500">Schedule Date</div>
                 <div className="text-black font-semibold">
                   {responseData.schedule.date}
-                </div>
+                </div> */}
               </li>
             </ul>
           </pre>

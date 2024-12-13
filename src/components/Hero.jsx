@@ -20,7 +20,7 @@ export default function Hero() {
           <p className="mt-5">Please register to be a part of the event.</p>
           <Link
             to="/booking"
-            className="bg-primary text-white px-8 py-2 text-xl font-semibold hover:opacity-80  transition-all rounded-lg  text-center"
+            className="bg-primary text-white px-8 py-2  font-semibold hover:opacity-80  transition-all rounded-lg  text-center"
           >
             Book Now
           </Link>

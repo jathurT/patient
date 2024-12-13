@@ -4,7 +4,6 @@ import Loader from "../components/Loader";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import ContactForm from "../components/ContactForm";
 export default function BookingPage() {
   const [schedules, setSchedules] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,6 +19,7 @@ export default function BookingPage() {
           "http://localhost:8080/api/schedules/all"
         );
         setSchedules(response.data);
+        console.log(response.data);
       } catch (err) {
         if (err.response) {
           // Server responded with a status code other than 2xx

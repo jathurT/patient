@@ -1,4 +1,13 @@
-import { AboutUs, Doctor } from "../assets/index";
+import {
+  ServiceDentalImplants,
+  ServiceDentalBridges,
+  ServiceOrthodonticTreatment,
+  ServiceRootCanalTreatment,
+  ServiceWisdomTeethExtraction,
+  ServiceTeethWhitening,
+  Hhro,
+  Doctor,
+} from "../assets/index";
 
 const dummySchedule = [
   {
@@ -59,4 +68,50 @@ const dummySchedule = [
   },
 ];
 
-export { dummySchedule };
+const services = [
+  {
+    name: "Dental Implants",
+    image: ServiceDentalImplants,
+    description:
+      "Dental implants are titanium tooth roots placed in the jawbone to support artificial teeth, providing a stable, natural-looking, and long-lasting solution for tooth loss. They fuse with the jawbone over time, improving chewing, speech, and facial structure.",
+    link: "/services",
+  },
+  {
+    name: "Orthodontic Treatment",
+    image: ServiceOrthodonticTreatment,
+    description:
+      "Orthodontic treatment uses braces, aligners, and other devices to correct misaligned teeth and jaw issues, improving dental function, appearance, and oral health.",
+    link: "/services",
+  },
+  {
+    name: "Dental Bridges",
+    image: ServiceDentalBridges,
+    description:
+      "Dental bridges replace missing teeth by bridging the gap between natural teeth, using crowns on adjacent teeth to hold artificial teeth in place. They improve chewing, speaking, and facial shape, offering a durable solution when implants aren’t suitable.",
+    link: "/services",
+  },
+  {
+    name: "Root Canal Treatment",
+    image: ServiceRootCanalTreatment,
+    description:
+      "Root canal treatment is a dental procedure to remove infected or damaged tissue (pulp) from inside a tooth. The inside of the tooth is then cleaned, disinfected, and sealed to prevent further infection. This treatment can save a severely decayed or infected tooth, relieving pain and preserving its function.",
+    link: "/services",
+  },
+
+  {
+    name: "Teeth Whitening",
+    image: ServiceTeethWhitening,
+    description:
+      "TTeeth whitening is a cosmetic procedure that lightens teeth and removes stains, enhancing their appearance. It can be done professionally or with at-home products, resulting in a brighter smile.",
+    link: "/services",
+  },
+  {
+    name: "Wisdom Teeth Extraction",
+    image: ServiceWisdomTeethExtraction,
+    description:
+      "Wisdom teeth extraction removes problematic third molars to prevent pain, infection, or crowding, helping to avoid future dental issues.",
+    link: "/services",
+  },
+];
+
+export { dummySchedule, services };
