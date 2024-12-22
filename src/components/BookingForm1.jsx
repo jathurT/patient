@@ -46,9 +46,9 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
       }
     } catch (error) {
       console.log(error.response);
-      if (error.response) {
+      if (error.response.data) {
         console.error("Error response:", error.response.data);
-        setError(error.response.data.message || "An error occurred.");
+        setError(error.response.data.error || "An error occurred.");
       } else {
         console.error("Error:", error.message);
         setError("An unexpected error occurred.");

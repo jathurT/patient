@@ -135,7 +135,7 @@ export default function MyBookingPage() {
     if (validateForm()) {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/bookings/${referenceNumber}?phone=${phone}`
+          `http://localhost:8080/api/bookings/${referenceNumber}/${phone}`
         );
 
         setResponseData(response.data);
