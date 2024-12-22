@@ -1,5 +1,5 @@
 import Doctor from "../components/Doctor";
-import Schedule from "../components/Schedule ";
+import Schedule from "../components/Schedule";
 import Loader from "../components/Loader";
 import axios from "axios";
 import { useEffect, useState } from "react";

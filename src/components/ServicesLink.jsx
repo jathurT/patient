@@ -1,7 +1,7 @@
 import { Hhro } from "../assets/index";
 import { Link } from "react-router-dom";
 import { services } from "../data/index";
-export default function Services() {
+export default function ServicesLink() {
   // const services = [
   //   {
   //     name: "General Checkup",

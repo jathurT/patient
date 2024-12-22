@@ -1,11 +1,10 @@
 import { useParams, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { dummySchedule } from "../data/index";
 
-import BookingForm1 from "../components/BookingForm1";
+import BookingForm from "../components/BookingForm";
 import Doctor from "../components/Doctor";
-import Schedule from "../components/Schedule ";
+import Schedule from "../components/Schedule";
 import Loader from "../components/Loader";
 
 export default function BookingFormPage() {
@@ -59,10 +58,6 @@ export default function BookingFormPage() {
     return <Navigate to="/booking" />;
   }
 
-  // const willingSchedule = dummySchedule[intId - 1]; // Get the schedule with the id
-  // if (!(willingSchedule.status === "Available")) {
-  //   return <Navigate to="/booking" />;
-  // }
   return (
     <div className="mt-[92px] lg:h-[1000px] md:h-[1000px] h-[1300px]">
       <div className="h-[258px] w-full flex justify-center bg-primary relative px-5  ">
@@ -71,7 +66,7 @@ export default function BookingFormPage() {
           <Schedule schedule={schedule} />
           {schedule.status === "Available" ? (
             <>
-              <BookingForm1
+              <BookingForm
                 scheduleId={schedule.id}
                 setIsLoading={setIsLoading}
                 setError={setError}

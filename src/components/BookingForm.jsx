@@ -1,7 +1,6 @@
-import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
-import Loader from "./Loader";
 import axios from "axios";
 
 export default function BookingForm({ scheduleId, setIsLoading, setError }) {
@@ -11,25 +10,18 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [isEdit, setIsEdit] = useState(false);
+  const navigate = useNavigate();
 
   const toggleBookingFormEdit = async (e) => {
     e.preventDefault();
-
     setIsEdit((prev) => !prev);
-    const formData = {
-      name,
-      nic,
-      contactNumber,
-      email,
-      address,
-      scheduleId,
-      date: new Date().toISOString(),
-    };
-    console.log("Form Data Submitted:", formData);
   };
 
-  const formIsValid = () => {};
   const handleSubmit = async (e) => {
+    const now = new Date();
+    const sriLankaTimeOffset = now.getTime() + 5.5 * 60 * 60 * 1000;
+    const sriLankaTime = new Date(sriLankaTimeOffset);
+    const sriLankaTimeISO = sriLankaTime.toISOString().slice(0, 19);
     e.preventDefault();
     const formData = {
       name,
@@ -38,7 +30,7 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
       email,
       address,
       scheduleId,
-      date: new Date().toLocaleTimeString(),
+      dateTime: sriLankaTimeISO,
     };
     console.log("Form Data Submitted:", formData);
     try {
@@ -48,14 +40,18 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
         formData
       );
       if (response.status === 201) {
-        console.log("Feedback submitted successfully", formData);
-        <Navigate to={`/booking/submit/${response.data.referenceId}`} />;
+        console.log("Form submitted successfully", response.data.referenceId);
+        console.log(response);
+        navigate(`/booking/submit/${response.data.referenceId}`);
       }
     } catch (error) {
-      if (error.response && error.response.status === 404) {
-        setError("Schedule not found.");
+      console.log(error.response);
+      if (error.response.data) {
+        console.error("Error response:", error.response.data);
+        setError(error.response.data.error || "An error occurred.");
       } else {
-        setError(error);
+        console.error("Error:", error.message);
+        setError("An unexpected error occurred.");
       }
     } finally {
       setName("");
@@ -67,42 +63,6 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
     }
   };
 
-  // Handle form submission
-  {
-    /*
-   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = { name, email, contactNumber, subject, message };
-    console.log("Form Data Submitted:", formData);
-    try {
-      const response = await fetch(
-        "http://localhost:8080/api/contact-us/submit",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      if (response.ok) {
-        console.log("Feedback submitted successfully", formData);
-      } else {
-        console.error("Failed to submit feedback");
-      }
-    } catch (error) {
-      console.error("Error submitting feedback:", error);
-    } finally {
-      setName("");
-      setEmail("");
-      setContactNumber("");
-      setSubject("");
-      setMessage("");
-    }
-  };
-*/
-  }
   return (
     <>
       {!isEdit && (

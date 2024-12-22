@@ -15,7 +15,7 @@ export default function ContactForm() {
     console.log("Form Data Submitted:", formData);
     try {
       const response = await fetch(
-        "http://localhost:8080/api/contact-us/submit",
+        "http://localhost:8080/api/contacts/submit",
         {
           method: "POST",
           headers: {
@@ -31,7 +31,7 @@ export default function ContactForm() {
         console.error("Failed to submit feedback");
       }
     } catch (error) {
-      console.error("Error submitting feedback:", error);
+      console.log("Error submitting feedback:", error.response);
     } finally {
       setName("");
       setEmail("");

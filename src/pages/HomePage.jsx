@@ -8,8 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Location from "../components/Location";
 import SuccessMessage from "../components/SuccessMessage";
-import Loader from "../components/Loader";
-import Try4 from "../components/Try4";
+
 export default function HomePage() {
   const [showForm, setShowForm] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
