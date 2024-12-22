@@ -136,9 +136,7 @@ export default function MyBookingPage() {
     e.preventDefault();
     if (validateForm()) {
       setIsLoading(true);
-      setInterval(() => {
-        console.log("Another 2 seconds have passed!");
-      }, 2000);
+
       try {
         const response = await axiosInstance.get(
           `/bookings/${referenceNumber}/${phone}`
