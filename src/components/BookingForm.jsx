@@ -1,64 +1,97 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
 import axios from "axios";
+import { z } from "zod";
+import { FaEdit } from "react-icons/fa";
+// Define validation schema with Zod
+const bookingSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .max(20, "Name should be less than 20 characters"),
+  nic: z
+    .string()
+    .regex(/^(\d{9}[VX]|[1-9]\d{11})$/, "Please enter a valid NIC number")
+    .min(10, "NIC number should be 10 characters")
+    .max(12, "NIC number should be 12 characters"),
+  contactNumber: z
+    .string()
+    .regex(/^\d{10}$/, "Contact number must be 10 digits"),
+  email: z.string().email("Invalid email address"),
+  address: z.string().min(1, "Address is required"),
+});
 
 export default function BookingForm({ scheduleId, setIsLoading, setError }) {
-  const [name, setName] = useState("");
-  const [nic, setNic] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    nic: "",
+    contactNumber: "",
+    email: "",
+    address: "",
+  });
+  const [errors, setErrors] = useState({});
   const [isEdit, setIsEdit] = useState(false);
   const navigate = useNavigate();
 
-  const toggleBookingFormEdit = async (e) => {
+  const toggleBookingFormEdit = (e) => {
+    setErrors({});
     e.preventDefault();
-    setIsEdit((prev) => !prev);
+    const validationResult = bookingSchema.safeParse(formData);
+    if (!validationResult.success) {
+      const fieldErrors = {};
+      validationResult.error.errors.forEach((error) => {
+        fieldErrors[error.path[0]] = error.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    } else {
+      setIsEdit((prev) => !prev);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
-    const now = new Date();
-    const sriLankaTimeOffset = now.getTime() + 5.5 * 60 * 60 * 1000;
-    const sriLankaTime = new Date(sriLankaTimeOffset);
-    const sriLankaTimeISO = sriLankaTime.toISOString().slice(0, 19);
     e.preventDefault();
-    const formData = {
-      name,
-      nic,
-      contactNumber,
-      email,
-      address,
-      scheduleId,
-      dateTime: sriLankaTimeISO,
-    };
-    console.log("Form Data Submitted:", formData);
+
+    // Validate form data with Zod
+    const validationResult = bookingSchema.safeParse(formData);
+    if (!validationResult.success) {
+      const fieldErrors = {};
+      validationResult.error.errors.forEach((error) => {
+        fieldErrors[error.path[0]] = error.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
     try {
       setIsLoading(true);
+      const now = new Date();
+      const sriLankaTimeOffset = now.getTime() + 5.5 * 60 * 60 * 1000;
+      const sriLankaTime = new Date(sriLankaTimeOffset);
+      const sriLankaTimeISO = sriLankaTime.toISOString().slice(0, 19);
+
       const response = await axios.post(
         "http://localhost:8080/api/bookings/create",
-        formData
+        {
+          ...formData,
+          scheduleId,
+          dateTime: sriLankaTimeISO,
+        }
       );
+
       if (response.status === 201) {
-        console.log("Form submitted successfully", response.data.referenceId);
-        console.log(response);
         navigate(`/booking/submit/${response.data.referenceId}`);
       }
     } catch (error) {
-      console.log(error.response);
-      if (error.response.data) {
-        console.error("Error response:", error.response.data);
-        setError(error.response.data.error || "An error occurred.");
-      } else {
-        console.error("Error:", error.message);
-        setError("An unexpected error occurred.");
-      }
+      setError(
+        error.response?.data?.message || "An unexpected error occurred."
+      );
     } finally {
-      setName("");
-      setNic("");
-      setContactNumber("");
-      setEmail("");
-      setAddress("");
       setIsLoading(false);
     }
   };
@@ -66,145 +99,157 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
   return (
     <>
       {!isEdit && (
-        <div className="flex  justify-center py-10 px-5 bg-white shadow-lg">
-          <div className=" xl:px-8 rounded-lg  w-full  max-w-screen-lg">
-            <h2 className="text-center text-2xl font-semibold mb-10">
-              Consult with Our Experts{" "}
-            </h2>
+        <div className="flex justify-center py-10 px-5 bg-white shadow-lg">
+          <div className="xl:px-8 rounded-lg w-full max-w-screen-lg">
+            <>
+              <h2 className="text-center text-2xl font-semibold mb-10">
+                Consult with Our Experts
+              </h2>
 
-            <form
-              onSubmit={toggleBookingFormEdit}
-              className="flex flex-col md:gap-4"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
+              <form
+                onSubmit={toggleBookingFormEdit}
+                className="flex flex-col md:gap-4"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Name
+                    </label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
+                    />
+                    {errors.name && (
+                      <p className="text-red-500 text-sm">{errors.name}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="nic"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      NIC
+                    </label>
+                    <input
+                      id="nic"
+                      name="nic"
+                      type="text"
+                      value={formData.nic}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
+                    />
+                    {errors.nic && (
+                      <p className="text-red-500 text-sm">{errors.nic}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label
+                      htmlFor="contactNumber"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Contact Number
+                    </label>
+                    <input
+                      id="contactNumber"
+                      name="contactNumber"
+                      type="text"
+                      value={formData.contactNumber}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
+                    />
+                    {errors.contactNumber && (
+                      <p className="text-red-500 text-sm">
+                        {errors.contactNumber}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Email
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm">{errors.email}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mb-4">
                   <label
+                    htmlFor="address"
                     className="block text-sm font-medium text-gray-700"
-                    htmlFor="name"
                   >
-                    Name
+                    Address
                   </label>
                   <input
-                    id="name"
-                    name="name"
+                    id="address"
+                    name="address"
                     type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Enter your first name"
+                    value={formData.address}
+                    onChange={handleInputChange}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
                   />
+                  {errors.address && (
+                    <p className="text-red-500 text-sm">{errors.address}</p>
+                  )}
                 </div>
 
-                <div>
-                  <label
-                    className="block text-sm font-medium text-gray-700"
-                    htmlFor="email"
+                <div className="flex justify-center">
+                  <button
+                    type="submit"
+                    className="bg-primary text-white px-6 py-2 rounded-md shadow-md hover:bg-teal-700 focus:outline-none focus:ring-teal-500"
                   >
-                    NIC
-                  </label>
-                  <input
-                    id="nic"
-                    name="nic"
-                    type="text"
-                    required
-                    value={nic}
-                    onChange={(e) => setNic(e.target.value)}
-                    placeholder="Enter your NIC number"
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
-                  />
+                    countinue
+                  </button>
                 </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label
-                    className="block text-sm font-medium text-gray-700"
-                    htmlFor="contactNumber"
-                  >
-                    Contact number
-                  </label>
-                  <input
-                    id="contactNumber"
-                    name="contactNumber"
-                    type="text"
-                    required
-                    value={contactNumber}
-                    onChange={(e) => setContactNumber(e.target.value)}
-                    placeholder="Enter your contact number"
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    className="block text-sm font-medium text-gray-700"
-                    htmlFor="subject"
-                  >
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={email}
-                    required
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email address"
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
-                  />
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  htmlFor="message"
-                >
-                  Address
-                </label>
-                <input
-                  id="address"
-                  name="address"
-                  type="text"
-                  value={address}
-                  required
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Enter your address"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
-                ></input>
-              </div>
-
-              <div className="flex justify-center">
-                <button
-                  type="submit"
-                  className="bg-primary text-white px-6 py-2 rounded-md shadow-md hover:bg-teal-700 focus:outline-none  focus:ring-teal-500"
-                >
-                  Continue
-                </button>
-              </div>
-            </form>
+              </form>
+            </>
           </div>
         </div>
       )}
       {isEdit && (
         <div className=" w-full p-5 bg-white rounded-2xl">
           <ul className="flex flex-col gap-5 bg-white ">
+            <h2 className=" text-2xl font-semibold">Confirm Details</h2>
             <li>
-              Name: <span className=" font-semibold">{name}</span>
+              Name: <span className=" font-semibold">{formData.name}</span>
             </li>
             <li>
-              NIC: <span className=" font-semibold">{nic}</span>
+              NIC: <span className=" font-semibold">{formData.nic}</span>
             </li>
             <li>
               Contact Number:{" "}
-              <span className=" font-semibold">{contactNumber}</span>
+              <span className=" font-semibold">{formData.contactNumber}</span>
             </li>
             <li>
-              Email: <span className=" font-semibold">{email}</span>
+              Email: <span className=" font-semibold">{formData.email}</span>
             </li>
+
             <li>
-              Address: <span className=" font-semibold">{address}</span>
+              Address:{" "}
+              <span className=" font-semibold">{formData.address}</span>
             </li>
           </ul>
           <div className="flex gap-5 mt-5">
@@ -219,7 +264,7 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
               onClick={handleSubmit}
               className="bg-primary text-white px-5 py-2 rounded-md hover:opacity-50 duration-300"
             >
-              Confirm
+              Confirm & Book
             </button>
           </div>
         </div>
