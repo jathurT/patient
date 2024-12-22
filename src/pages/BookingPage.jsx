@@ -1,7 +1,7 @@
 import Doctor from "../components/Doctor";
 import Schedule from "../components/Schedule";
 import Loader from "../components/Loader";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { useEffect, useState } from "react";
 
 export default function BookingPage() {
@@ -15,19 +15,13 @@ export default function BookingPage() {
       setError(null); // Reset any previous error
 
       try {
-        const response = await axios.get(
-          "http://localhost:8080/api/schedules/all"
-        );
+        const response = await axiosInstance.get("/schedules/all");
         setSchedules(response.data);
         console.log(response.data);
       } catch (err) {
         if (err.response) {
           // Server responded with a status code other than 2xx
-          setError(
-            `Server Error: ${err.response.status} - ${
-              err.response.data.message || "Something went wrong"
-            }`
-          );
+          setError(`${err.response.data.message || "Something went wrong"}`);
         } else if (err.request) {
           // Request was made but no response received
           setError(

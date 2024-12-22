@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { z } from "zod";
 import { FaEdit } from "react-icons/fa";
 // Define validation schema with Zod
@@ -75,14 +75,11 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
       const sriLankaTime = new Date(sriLankaTimeOffset);
       const sriLankaTimeISO = sriLankaTime.toISOString().slice(0, 19);
 
-      const response = await axios.post(
-        "http://localhost:8080/api/bookings/create",
-        {
-          ...formData,
-          scheduleId,
-          dateTime: sriLankaTimeISO,
-        }
-      );
+      const response = await axiosInstance.post("/bookings/create", {
+        ...formData,
+        scheduleId,
+        dateTime: sriLankaTimeISO,
+      });
 
       if (response.status === 201) {
         navigate(`/booking/submit/${response.data.referenceId}`);

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
 
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
 export default function ConfirmationPage() {
   const { id } = useParams();
@@ -15,9 +15,7 @@ export default function ConfirmationPage() {
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/bookings/${referenceId}`
-        );
+        const response = await axiosInstance.get(`/bookings/${referenceId}`);
         if (response.status === 200) {
           setBooking(response.data);
         }
@@ -75,6 +73,18 @@ export default function ConfirmationPage() {
                     <div className="text-gray-500">Ref Number</div>
                     <div className="text-black font-semibold">
                       {booking.referenceId}
+                    </div>
+                  </li>
+                  <li className="flex justify-between">
+                    <div className="text-gray-500">NIC</div>
+                    <div className="text-black font-semibold">
+                      {booking.nic}
+                    </div>
+                  </li>
+                  <li className="flex justify-between">
+                    <div className="text-gray-500">Contact number</div>
+                    <div className="text-black font-semibold">
+                      {booking.contactNumber}
                     </div>
                   </li>
                   <li className="flex justify-between">

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { FaUser, FaPhoneAlt } from "react-icons/fa";
 import { FaFileArrowDown } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import jsPDF from "jspdf";
 import { Logo } from "../assets/index";
-
+import { set } from "zod";
+import ButtonLording from "../components/ButtonLording";
 export default function MyBookingPage() {
   const [referenceNumber, setReferenceNumber] = useState("");
   const [phone, setPhone] = useState("");
@@ -14,6 +15,7 @@ export default function MyBookingPage() {
     phone: "",
   });
   const [responseData, setResponseData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDownloadPDF = (e) => {
     e.preventDefault();
@@ -133,9 +135,13 @@ export default function MyBookingPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
+      setIsLoading(true);
+      setInterval(() => {
+        console.log("Another 2 seconds have passed!");
+      }, 2000);
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/bookings/${referenceNumber}/${phone}`
+        const response = await axiosInstance.get(
+          `/bookings/${referenceNumber}/${phone}`
         );
 
         setResponseData(response.data);
@@ -143,8 +149,10 @@ export default function MyBookingPage() {
         console.error("Error fetching data:", error);
         setErrors({
           ...errors,
-          form: "There is no booking",
+          form: error.response.data.error || "Failed to fetch booking details",
         });
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -191,8 +199,14 @@ export default function MyBookingPage() {
           type="submit"
           className="w-full bg-primary hover:bg-opacity-90 text-white py-2 rounded flex items-center justify-center space-x-2"
         >
-          <IoSearch />
-          <span>Search</span>
+          {isLoading ? (
+            <ButtonLording />
+          ) : (
+            <>
+              <IoSearch />
+              <span>Search</span>
+            </>
+          )}
         </button>
         {errors.form && (
           <p className="text-red-500 text-sm mt-4">{errors.form}</p>
@@ -204,7 +218,7 @@ export default function MyBookingPage() {
           </p>
         </div>
       </form>
-      {responseData && (
+      {responseData && !errors.form && (
         <div className="mt-4 p-4 bg-gray-100 rounded-lg">
           <h3 className="text-primary font-bold">Booking details</h3>
           <pre className="text-sm text-gray-700">

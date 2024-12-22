@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import axiosInstance from "../api/axiosInstance";
 export default function ContactForm() {
   // Define separate state for each form input
   const [name, setName] = useState("");
@@ -14,18 +14,11 @@ export default function ContactForm() {
     const formData = { name, email, contactNumber, subject, message };
     console.log("Form Data Submitted:", formData);
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/contacts/submit",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await axiosInstance.post("/contacts/submit", {
+        ...formData,
+      });
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log("Feedback submitted successfully", formData);
       } else {
         console.error("Failed to submit feedback");

@@ -1,6 +1,6 @@
 import { useParams, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
 import BookingForm from "../components/BookingForm";
 import Doctor from "../components/Doctor";
@@ -17,9 +17,7 @@ export default function BookingFormPage() {
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/schedules/${intId}`
-        );
+        const response = await axiosInstance.get(`/schedules/${intId}`);
         if (response.status === 200) {
           setSchedule(response.data);
         }
