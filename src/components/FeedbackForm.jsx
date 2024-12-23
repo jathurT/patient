@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { FaStar } from "react-icons/fa";
-
+import axiosInstance from "../api/axiosInstance";
 export default function FeedbackForm({ onClose, onFormSubmit }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,25 +20,22 @@ export default function FeedbackForm({ onClose, onFormSubmit }) {
     const feedbackData = { name, email, rating, comments };
     console.log(feedbackData);
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/feedback/submit",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(feedbackData),
-        }
+      const response = await axiosInstance.post(
+        "/feedback/submit",
+        feedbackData
       );
 
-      if (response.ok) {
+      if (response.status === 201) {
         console.log("Feedback submitted successfully", feedbackData);
-        onFormSubmit(); //Trigger the form submit handler to show success message and close modal
+        onFormSubmit(); // Trigger the form submit handler to show success message and close modal
       } else {
         console.error("Failed to submit feedback");
       }
     } catch (error) {
-      console.error("Error submitting feedback:", error);
+      console.error(
+        "Error submitting feedback:",
+        error.response.data.error ?? null
+      );
     } finally {
       onClose();
     }
