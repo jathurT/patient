@@ -22,10 +22,10 @@ export default function BookingFormPage() {
           setSchedule(response.data);
         }
       } catch (err) {
-        if (err.response && err.response.status === 404) {
-          setError("Schedule not found.");
-        } else {
-          setError("Error fetching schedule data.");
+        if (err.response.data.error && err.response.status === 404) {
+          setError(err.response.data.error);
+        } else if (err.response.data.error && err.response.status === 401) {
+          setError(err.response.data.error);
         }
       } finally {
         setIsLoading(false);

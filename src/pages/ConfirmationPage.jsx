@@ -2,11 +2,9 @@ import { HiCheck } from "react-icons/hi";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
-
 import axiosInstance from "../api/axiosInstance";
-
 export default function ConfirmationPage() {
-  const { id } = useParams();
+  const { id, contactNumber } = useParams();
   const referenceId = parseInt(id, 10);
   const [booking, setBooking] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -15,7 +13,9 @@ export default function ConfirmationPage() {
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
-        const response = await axiosInstance.get(`/bookings/${referenceId}`);
+        const response = await axiosInstance.get(
+          `/bookings/${referenceId}/${contactNumber}`
+        );
         if (response.status === 200) {
           setBooking(response.data);
         }
@@ -27,11 +27,12 @@ export default function ConfirmationPage() {
         }
       } finally {
         setIsLoading(false);
+        localStorage.removeItem("encryptedReferenceId");
       }
     };
 
     fetchSchedule();
-  }, [referenceId]);
+  }, []);
 
   if (isLoading) {
     return (

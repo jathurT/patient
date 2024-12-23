@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
-import { z } from "zod";
 import { FaEdit } from "react-icons/fa";
+import CryptoJS from "crypto-js";
 // Define validation schema with Zod
 const bookingSchema = z.object({
   name: z
@@ -22,52 +25,32 @@ const bookingSchema = z.object({
 });
 
 export default function BookingForm({ scheduleId, setIsLoading, setError }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    nic: "",
-    contactNumber: "",
-    email: "",
-    address: "",
-  });
-  const [errors, setErrors] = useState({});
   const [isEdit, setIsEdit] = useState(false);
   const navigate = useNavigate();
 
-  const toggleBookingFormEdit = (e) => {
-    setErrors({});
-    e.preventDefault();
-    const validationResult = bookingSchema.safeParse(formData);
-    if (!validationResult.success) {
-      const fieldErrors = {};
-      validationResult.error.errors.forEach((error) => {
-        fieldErrors[error.path[0]] = error.message;
-      });
-      setErrors(fieldErrors);
-      return;
-    } else {
-      setIsEdit((prev) => !prev);
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm({
+    resolver: zodResolver(bookingSchema),
+    defaultValues: {
+      name: "",
+      nic: "",
+      contactNumber: "",
+      email: "",
+      address: "",
+    },
+  });
+
+  const formData = watch();
+
+  const toggleBookingFormEdit = () => {
+    setIsEdit((prev) => !prev);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validate form data with Zod
-    const validationResult = bookingSchema.safeParse(formData);
-    if (!validationResult.success) {
-      const fieldErrors = {};
-      validationResult.error.errors.forEach((error) => {
-        fieldErrors[error.path[0]] = error.message;
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-
+  const onSubmit = async (data) => {
     try {
       setIsLoading(true);
       const now = new Date();
@@ -76,18 +59,19 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
       const sriLankaTimeISO = sriLankaTime.toISOString().slice(0, 19);
 
       const response = await axiosInstance.post("/bookings/create", {
-        ...formData,
+        ...data,
         scheduleId,
         dateTime: sriLankaTimeISO,
       });
 
       if (response.status === 201) {
-        navigate(`/booking/submit/${response.data.referenceId}`);
+        navigate(
+          `/booking/submit/${response.data.referenceId}/${response.data.contactNumber}`
+        );
       }
     } catch (error) {
-      setError(
-        error.response?.data?.message || "An unexpected error occurred."
-      );
+      console.error(error);
+      setError(error.response?.data?.error || "An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -98,174 +82,151 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
       {!isEdit && (
         <div className="flex justify-center py-10 px-5 bg-white shadow-lg">
           <div className="xl:px-8 rounded-lg w-full max-w-screen-lg">
-            <>
-              <h2 className="text-center text-2xl font-semibold mb-10">
-                Consult with Our Experts
-              </h2>
+            <h2 className="text-center text-2xl font-semibold mb-10">
+              Consult with Our Experts
+            </h2>
 
-              <form
-                onSubmit={toggleBookingFormEdit}
-                className="flex flex-col md:gap-4"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Name
-                    </label>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
-                    />
-                    {errors.name && (
-                      <p className="text-red-500 text-sm">{errors.name}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="nic"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      NIC
-                    </label>
-                    <input
-                      id="nic"
-                      name="nic"
-                      type="text"
-                      value={formData.nic}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
-                    />
-                    {errors.nic && (
-                      <p className="text-red-500 text-sm">{errors.nic}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label
-                      htmlFor="contactNumber"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Contact Number
-                    </label>
-                    <input
-                      id="contactNumber"
-                      name="contactNumber"
-                      type="text"
-                      value={formData.contactNumber}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
-                    />
-                    {errors.contactNumber && (
-                      <p className="text-red-500 text-sm">
-                        {errors.contactNumber}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Email
-                    </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
-                    />
-                    {errors.email && (
-                      <p className="text-red-500 text-sm">{errors.email}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <label
-                    htmlFor="address"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Address
+            <form
+              onSubmit={handleSubmit(toggleBookingFormEdit)}
+              className="flex flex-col md:gap-4"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium">
+                    Name
                   </label>
                   <input
-                    id="address"
-                    name="address"
-                    type="text"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
+                    id="name"
+                    {...register("name")}
+                    className="mt-1 block w-full border rounded-md p-2"
                   />
-                  {errors.address && (
-                    <p className="text-red-500 text-sm">{errors.address}</p>
+                  {errors.name && (
+                    <p className="text-red-500 text-sm">
+                      {errors.name.message}
+                    </p>
                   )}
                 </div>
 
-                <div className="flex justify-center">
-                  <button
-                    type="submit"
-                    className="bg-primary text-white px-6 py-2 rounded-md shadow-md hover:bg-teal-700 focus:outline-none focus:ring-teal-500"
-                  >
-                    countinue
-                  </button>
+                <div>
+                  <label htmlFor="nic" className="block text-sm font-medium">
+                    NIC
+                  </label>
+                  <input
+                    id="nic"
+                    {...register("nic")}
+                    className="mt-1 block w-full border rounded-md p-2"
+                  />
+                  {errors.nic && (
+                    <p className="text-red-500 text-sm">{errors.nic.message}</p>
+                  )}
                 </div>
-              </form>
-            </>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label
+                    htmlFor="contactNumber"
+                    className="block text-sm font-medium"
+                  >
+                    Contact Number
+                  </label>
+                  <input
+                    id="contactNumber"
+                    {...register("contactNumber")}
+                    className="mt-1 block w-full border rounded-md p-2"
+                  />
+                  {errors.contactNumber && (
+                    <p className="text-red-500 text-sm">
+                      {errors.contactNumber.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    {...register("email")}
+                    className="mt-1 block w-full border rounded-md p-2"
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="address" className="block text-sm font-medium">
+                  Address
+                </label>
+                <input
+                  id="address"
+                  {...register("address")}
+                  className="mt-1 block w-full border rounded-md p-2"
+                />
+                {errors.address && (
+                  <p className="text-red-500 text-sm">
+                    {errors.address.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className="bg-primary text-white px-6 py-2 rounded-md"
+                >
+                  Continue
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
+
       {isEdit && (
-        <div className=" w-full p-5 bg-white rounded-2xl">
-          <ul className="flex flex-col gap-5 bg-white ">
-            <h2 className=" text-2xl font-semibold">Confirm Details</h2>
+        <div className="w-full p-5 bg-white rounded-2xl">
+          <ul className="flex flex-col gap-5">
+            <h2 className="text-2xl font-semibold">Confirm Details</h2>
             <li>
-              Name: <span className=" font-semibold">{formData.name}</span>
+              Name: <span className="font-semibold">{formData.name}</span>
             </li>
             <li>
-              NIC: <span className=" font-semibold">{formData.nic}</span>
+              NIC: <span className="font-semibold">{formData.nic}</span>
             </li>
             <li>
               Contact Number:{" "}
-              <span className=" font-semibold">{formData.contactNumber}</span>
+              <span className="font-semibold">{formData.contactNumber}</span>
             </li>
             <li>
-              Email: <span className=" font-semibold">{formData.email}</span>
+              Email: <span className="font-semibold">{formData.email}</span>
             </li>
-
             <li>
-              Address:{" "}
-              <span className=" font-semibold">{formData.address}</span>
+              Address: <span className="font-semibold">{formData.address}</span>
             </li>
           </ul>
+
           <div className="flex gap-5 mt-5">
             <button
               onClick={toggleBookingFormEdit}
-              className=" border border-primary px-5 py-2 text-primary rounded-md flex items-center gap-2 hover:bg-primary hover:text-white duration-300"
+              className="border px-5 py-2 rounded-md flex items-center gap-2"
             >
               <FaEdit />
               Edit
             </button>
             <button
-              onClick={handleSubmit}
-              className="bg-primary text-white px-5 py-2 rounded-md hover:opacity-50 duration-300"
+              onClick={handleSubmit(onSubmit)}
+              className="bg-primary text-white px-5 py-2 rounded-md"
             >
               Confirm & Book
             </button>
           </div>
         </div>
-      )}{" "}
+      )}
     </>
   );
 }

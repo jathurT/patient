@@ -1,47 +1,63 @@
-import React, { useState } from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import axiosInstance from "../api/axiosInstance";
+
+// Define the Zod schema
+const contactFormSchema = z.object({
+  name: z
+    .string()
+    .nonempty("Name is required")
+    .max(20, "Name should be less than 20 characters"),
+  email: z
+    .string()
+    .nonempty("Email is required")
+    .email("Please provide a valid email address"),
+  contactNumber: z
+    .string()
+    .regex(/^\d{10}$/, "Contact number must be 10 digits"),
+  subject: z.string().nonempty("Subject is required"),
+  message: z
+    .string()
+    .nonempty("Message is required")
+    .max(1000, "Message cannot exceed 1000 characters"),
+});
+
 export default function ContactForm() {
-  // Define separate state for each form input
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm({
+    resolver: zodResolver(contactFormSchema),
+  });
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
-    const formData = { name, email, contactNumber, subject, message };
+  const onSubmit = async (formData) => {
     console.log("Form Data Submitted:", formData);
-    try {
-      const response = await axiosInstance.post("/contacts/submit", {
-        ...formData,
-      });
 
-      if (response.status === 200) {
+    try {
+      const response = await axiosInstance.post("/contacts/submit", formData);
+
+      if (response.status === 201) {
         console.log("Feedback submitted successfully", formData);
+        reset(); // Reset the form after successful submission
       } else {
         console.error("Failed to submit feedback");
       }
     } catch (error) {
       console.log("Error submitting feedback:", error.response);
-    } finally {
-      setName("");
-      setEmail("");
-      setContactNumber("");
-      setSubject("");
-      setMessage("");
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen px-5 bg-white ">
-      <div className="bg-white p-8 rounded-lg  w-full  max-w-screen-lg">
+    <div className="flex items-center justify-center h-screen px-5 bg-white">
+      <div className="bg-white p-8 rounded-lg w-full max-w-screen-lg">
         <h2 className="text-center text-2xl font-semibold mb-6">
           Get In Touch
         </h2>
-
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label
@@ -52,15 +68,14 @@ export default function ContactForm() {
               </label>
               <input
                 id="name"
-                name="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                {...register("name")}
                 placeholder="Enter your first name"
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
               />
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
             </div>
-
             <div>
               <label
                 className="block text-sm font-medium text-gray-700"
@@ -70,36 +85,36 @@ export default function ContactForm() {
               </label>
               <input
                 id="email"
-                name="email"
+                {...register("email")}
                 type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
             </div>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label
                 className="block text-sm font-medium text-gray-700"
                 htmlFor="contactNumber"
               >
-                Contact number
+                Contact Number
               </label>
               <input
                 id="contactNumber"
-                name="contactNumber"
-                type="text"
-                value={contactNumber}
-                onChange={(e) => setContactNumber(e.target.value)}
+                {...register("contactNumber")}
                 placeholder="Enter your contact number"
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
               />
+              {errors.contactNumber && (
+                <p className="text-red-500 text-sm">
+                  {errors.contactNumber.message}
+                </p>
+              )}
             </div>
-
             <div>
               <label
                 className="block text-sm font-medium text-gray-700"
@@ -109,17 +124,15 @@ export default function ContactForm() {
               </label>
               <input
                 id="subject"
-                name="subject"
-                type="text"
-                value={subject}
-                required
-                onChange={(e) => setSubject(e.target.value)}
+                {...register("subject")}
                 placeholder="Enter your subject"
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
               />
+              {errors.subject && (
+                <p className="text-red-500 text-sm">{errors.subject.message}</p>
+              )}
             </div>
           </div>
-
           <div className="mb-4">
             <label
               className="block text-sm font-medium text-gray-700"
@@ -129,22 +142,22 @@ export default function ContactForm() {
             </label>
             <textarea
               id="message"
-              name="message"
+              {...register("message")}
               rows="4"
-              value={message}
-              required
-              onChange={(e) => setMessage(e.target.value)}
               placeholder="Type your message..."
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 p-2"
             ></textarea>
+            {errors.message && (
+              <p className="text-red-500 text-sm">{errors.message.message}</p>
+            )}
           </div>
-
           <div className="flex justify-center">
             <button
               type="submit"
-              className="bg-primary text-white px-6 py-2 rounded-md shadow-md hover:bg-teal-700 focus:outline-none  focus:ring-teal-500"
+              disabled={isSubmitting}
+              className="bg-primary text-white px-6 py-2 rounded-md shadow-md hover:bg-teal-700 focus:outline-none focus:ring-teal-500"
             >
-              Submit
+              {isSubmitting ? "Submitting..." : "Submit"}
             </button>
           </div>
         </form>

@@ -30,7 +30,10 @@ function App() {
         { path: "contact", element: <ContactPage /> },
         { path: "booking", element: <BookingPage /> },
         { path: "booking/:id", element: <BookingFormPage /> },
-        { path: "booking/submit/:id", element: <ConfirmationPage /> },
+        {
+          path: "booking/submit/:id/:contactNumber",
+          element: <ConfirmationPage />,
+        },
         { path: "myBooking", element: <MyBookingPage /> },
       ],
     },
