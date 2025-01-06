@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axiosInstance from "../api/axiosInstance";
-
+import SuccessMessage from "../components/SuccessMessage";
 // Define the Zod schema
 const contactFormSchema = z.object({
   name: z

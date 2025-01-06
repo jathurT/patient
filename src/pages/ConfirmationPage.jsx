@@ -5,7 +5,7 @@ import Loader from "../components/Loader";
 import axiosInstance from "../api/axiosInstance";
 export default function ConfirmationPage() {
   const { id, contactNumber } = useParams();
-  const referenceId = parseInt(id, 10);
+
   const [booking, setBooking] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,14 +14,14 @@ export default function ConfirmationPage() {
     const fetchSchedule = async () => {
       try {
         const response = await axiosInstance.get(
-          `/bookings/${referenceId}/${contactNumber}`
+          `/bookings/${id}/${contactNumber}`
         );
         if (response.status === 200) {
           setBooking(response.data);
         }
       } catch (err) {
         if (err.response && err.response.status === 404) {
-          setError("Booking not found.");
+          setError(err.response.data.details.error);
         } else {
           setError("Error fetching booking data.");
         }

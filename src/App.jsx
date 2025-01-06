@@ -13,9 +13,6 @@ import NotFoundPage from "./pages/NotFoundPage";
 import BookingFormPage from "./pages/BookingFormPage";
 import ConfirmationPage from "./pages/ConfirmationPage";
 import MyBookingPage from "./pages/MyBookingPage";
-import axios from "axios";
-
-axios.defaults.baseURL = "http://localhost:8000";
 
 function App() {
   const router = createBrowserRouter([

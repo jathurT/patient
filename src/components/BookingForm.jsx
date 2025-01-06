@@ -71,7 +71,7 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
       }
     } catch (error) {
       console.error(error);
-      setError(error.response?.data?.error || "An unexpected error occurred.");
+      setError(error.response?.data || "An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -97,6 +97,7 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
                   </label>
                   <input
                     id="name"
+                    placeholder="Enter your name"
                     {...register("name")}
                     className="mt-1 block w-full border rounded-md p-2"
                   />
@@ -113,6 +114,7 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
                   </label>
                   <input
                     id="nic"
+                    placeholder="Enter your NIC number"
                     {...register("nic")}
                     className="mt-1 block w-full border rounded-md p-2"
                   />
@@ -132,6 +134,7 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
                   </label>
                   <input
                     id="contactNumber"
+                    placeholder="Enter your contact number"
                     {...register("contactNumber")}
                     className="mt-1 block w-full border rounded-md p-2"
                   />
@@ -148,6 +151,7 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
                   </label>
                   <input
                     id="email"
+                    placeholder="Enter your email"
                     {...register("email")}
                     className="mt-1 block w-full border rounded-md p-2"
                   />
@@ -164,6 +168,7 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
                   Address
                 </label>
                 <input
+                  placeholder="Enter your address"
                   id="address"
                   {...register("address")}
                   className="mt-1 block w-full border rounded-md p-2"

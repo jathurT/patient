@@ -4,28 +4,28 @@ import { CiBookmark, CiLock } from "react-icons/ci";
 export default function Schedule({ schedule }) {
   const scheduleTheme = {
     statusbarStyle: {
-      Available: "text-green-500 bg-green-100",
-      Unavailable: "text-red-500 bg-red-100",
-      Full: "text-purple-500 bg-purple-100",
-      Cancelled: "text-yellow-600 bg-yellow-100",
+      AVAILABLE: "text-green-500 bg-green-100",
+      UNAVAILABLE: "text-red-500 bg-red-100",
+      FULL: "text-purple-500 bg-purple-100",
+      CANCELLED: "text-yellow-600 bg-yellow-100",
     },
     linkStyle: {
-      Available: "cursor-pointer hover:opacity-50 duration-300",
-      Unavailable: "cursor-not-allowed",
-      Full: "cursor-not-allowed",
-      Cancelled: "cursor-not-allowed",
+      AVAILABLE: "cursor-pointer hover:opacity-50 duration-300",
+      UNAVAILABLE: "cursor-not-allowed",
+      FULL: "cursor-not-allowed",
+      CANCELLED: "cursor-not-allowed",
     },
     bookingButtonLogo: {
-      Available: <CiBookmark />,
-      Unavailable: <CiLock />,
-      Full: <CiLock />,
-      Cancelled: <CiLock />,
+      AVAILABLE: <CiBookmark />,
+      UNAVAILABLE: <CiLock />,
+      FULL: <CiLock />,
+      CANCELLED: <CiLock />,
     },
     link: {
-      Available: `/booking/${schedule.id}`,
-      Unavailable: "/booking",
-      Full: "/booking",
-      Cancelled: "/booking",
+      AVAILABLE: `/booking/${schedule.id}`,
+      UNAVAILABLE: "/booking",
+      FULL: "/booking",
+      CANCELLED: "/booking",
     },
   };
   return (

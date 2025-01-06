@@ -147,7 +147,9 @@ export default function MyBookingPage() {
         console.error("Error fetching data:", error);
         setErrors({
           ...errors,
-          form: error.response.data.error || "Failed to fetch booking details",
+          form:
+            error.response.data.details.error ||
+            "Failed to fetch booking details",
         });
       } finally {
         setIsLoading(false);

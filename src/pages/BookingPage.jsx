@@ -15,13 +15,16 @@ export default function BookingPage() {
       setError(null); // Reset any previous error
 
       try {
-        const response = await axiosInstance.get("/schedules/all");
+        const response = await axiosInstance.get("/schedules/getSeven");
         setSchedules(response.data);
         console.log(response.data);
       } catch (err) {
         if (err.response) {
+          console.log(err.response);
           // Server responded with a status code other than 2xx
-          setError(`${err.response.data.message || "Something went wrong"}`);
+          setError(
+            `${err.response.data.details.error || "Something went wrong"}`
+          );
         } else if (err.request) {
           // Request was made but no response received
           setError(

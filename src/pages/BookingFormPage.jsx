@@ -22,10 +22,13 @@ export default function BookingFormPage() {
           setSchedule(response.data);
         }
       } catch (err) {
-        if (err.response.data.error && err.response.status === 404) {
-          setError(err.response.data.error);
-        } else if (err.response.data.error && err.response.status === 401) {
-          setError(err.response.data.error);
+        if (err.response.data.details.error && err.response.status === 404) {
+          setError(err.response.data.details.error);
+        } else if (
+          err.response.data.details.error &&
+          err.response.status === 401
+        ) {
+          setError(err.response.data.details.error);
         }
       } finally {
         setIsLoading(false);
@@ -52,7 +55,7 @@ export default function BookingFormPage() {
   }
 
   // Handle case where schedule is not available
-  if (!schedule || schedule.status !== "Available") {
+  if (!schedule || schedule.status !== "AVAILABLE") {
     return <Navigate to="/booking" />;
   }
 
@@ -62,7 +65,7 @@ export default function BookingFormPage() {
         <div className=" absolute top-1/4 md:top-1/3 xl:max-w-screen-xl lg:max-w-screen-lg lg:w-full flex flex-col gap-5 ">
           <Doctor />
           <Schedule schedule={schedule} />
-          {schedule.status === "Available" ? (
+          {schedule.status === "AVAILABLE" ? (
             <>
               <BookingForm
                 scheduleId={schedule.id}
