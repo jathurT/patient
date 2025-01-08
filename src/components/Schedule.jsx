@@ -8,24 +8,32 @@ export default function Schedule({ schedule }) {
       UNAVAILABLE: "text-red-500 bg-red-100",
       FULL: "text-purple-500 bg-purple-100",
       CANCELLED: "text-yellow-600 bg-yellow-100",
+      ON_GOING: "text-blue-500 bg-blue-100",
+      FINISHED: "text-gray-600 bg-gray-100",
     },
     linkStyle: {
       AVAILABLE: "cursor-pointer hover:opacity-50 duration-300",
       UNAVAILABLE: "cursor-not-allowed",
       FULL: "cursor-not-allowed",
       CANCELLED: "cursor-not-allowed",
+      ON_GOING: "cursor-not-allowed",
+      FINISHED: "cursor-not-allowed",
     },
     bookingButtonLogo: {
       AVAILABLE: <CiBookmark />,
       UNAVAILABLE: <CiLock />,
       FULL: <CiLock />,
       CANCELLED: <CiLock />,
+      ON_GOING: <CiLock />,
+      FINISHED: <CiLock />,
     },
     link: {
       AVAILABLE: `/booking/${schedule.id}`,
       UNAVAILABLE: "/booking",
       FULL: "/booking",
       CANCELLED: "/booking",
+      ON_GOING: "/booking",
+      FINISHED: "/booking",
     },
   };
   return (

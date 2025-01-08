@@ -32,7 +32,6 @@ export default function MyBookingPage() {
 
   const generatePDF = (bookingDetails) => {
     const doc = new jsPDF();
-
     const currentDate = new Date();
     const dateStr = currentDate.toLocaleDateString(); // Format the date as "MM/DD/YYYY" or according to locale
     const timeStr = currentDate.toLocaleTimeString(); // Format the time as "HH:MM:SS"

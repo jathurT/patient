@@ -18,6 +18,7 @@ export default function BookingFormPage() {
     const fetchSchedule = async () => {
       try {
         const response = await axiosInstance.get(`/schedules/${intId}`);
+        console.log(response.data);
         if (response.status === 200) {
           setSchedule(response.data);
         }
@@ -65,7 +66,7 @@ export default function BookingFormPage() {
         <div className=" absolute top-1/4 md:top-1/3 xl:max-w-screen-xl lg:max-w-screen-lg lg:w-full flex flex-col gap-5 ">
           <Doctor />
           <Schedule schedule={schedule} />
-          {schedule.status === "AVAILABLE" ? (
+          {schedule.status == "AVAILABLE" ? (
             <>
               <BookingForm
                 scheduleId={schedule.id}

@@ -53,15 +53,10 @@ export default function BookingForm({ scheduleId, setIsLoading, setError }) {
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
-      const now = new Date();
-      const sriLankaTimeOffset = now.getTime() + 5.5 * 60 * 60 * 1000;
-      const sriLankaTime = new Date(sriLankaTimeOffset);
-      const sriLankaTimeISO = sriLankaTime.toISOString().slice(0, 19);
 
       const response = await axiosInstance.post("/bookings/create", {
         ...data,
         scheduleId,
-        dateTime: sriLankaTimeISO,
       });
 
       if (response.status === 201) {

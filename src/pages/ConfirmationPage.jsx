@@ -27,7 +27,7 @@ export default function ConfirmationPage() {
         }
       } finally {
         setIsLoading(false);
-        localStorage.removeItem("encryptedReferenceId");
+       
       }
     };
 
