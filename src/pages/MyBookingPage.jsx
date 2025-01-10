@@ -36,16 +36,20 @@ export default function MyBookingPage() {
     const dateStr = currentDate.toLocaleDateString(); // Format the date as "MM/DD/YYYY" or according to locale
     const timeStr = currentDate.toLocaleTimeString(); // Format the time as "HH:MM:SS"
 
-    // Add current date and time to the top of the page
+    doc.setFillColor(0, 126, 133); // Teal color
+    doc.rect(0, 0, 210, 14, "F"); // Rectangle width adjusted for A4 size paper
+
+    // Date and Time in header
     doc.setFontSize(10);
+    doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "normal");
-    doc.text(`Date: ${dateStr}`, 20, 10);
-    doc.text(`Time: ${timeStr}`, 160, 10); // Position on the right side
+    doc.text(`Date: ${dateStr}`, 20, 8);
+    doc.text(`Time: ${timeStr}`, 180, 8, { align: "right" });
 
     const logoData = Logo; // Base64 string of your logo
     const logoWidth = 15; // Set your desired logo width
     const logoHeight = 15; // Set your desired logo height
-    doc.addImage(logoData, "PNG", 62, 15, logoWidth, logoHeight); // Position the logo at (10, 10)
+    doc.addImage(logoData, "PNG", 62, 15 + 2, logoWidth, logoHeight); // Position the logo at (10, 10)
 
     doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
@@ -54,7 +58,7 @@ export default function MyBookingPage() {
     const confirmationTextWidth1 = doc.getTextWidth(confirmationText1);
     const confirmationX1 =
       (doc.internal.pageSize.getWidth() - confirmationTextWidth1) / 2; // Calculate x for centering
-    doc.text(confirmationText1, confirmationX1 + 7, 25); // Draw the centered text
+    doc.text(confirmationText1, confirmationX1 + 7, 25 + 3); // Draw the centered text
 
     const lineY = 15 + logoHeight + 5; // Y position for the line, 5 units below the logo
     doc.line(10, lineY, 200, lineY); // Draw the line from x=10 to x=200 at y=lineY
@@ -69,28 +73,72 @@ export default function MyBookingPage() {
       (doc.internal.pageSize.getWidth() - confirmationTextWidth) / 2; // Calculate x for centering
     doc.text(confirmationText, confirmationX, 48); // Draw the centered text
 
-    // Reset font to normal for other details
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
 
-    // Booking details
-    doc.text(`Reference Number `, 20, 65);
-    doc.text(`:    ${bookingDetails.referenceId}`, 60, 65);
-    doc.text(`Sender Name`, 20, 75);
-    doc.text(`:    ${bookingDetails.name}`, 60, 75);
-    doc.text(`Nic`, 20, 85);
-    doc.text(`:    ${bookingDetails.nic}`, 60, 85);
+    doc.text(`Reference Number`, 20, 65);
+    doc.text(`: ${bookingDetails.referenceId}`, 80, 65);
+
+    doc.text(`Patient Name`, 20, 75);
+    doc.text(`: ${bookingDetails.name}`, 80, 75);
+
+    doc.text(`NIC`, 20, 85);
+    doc.text(`: ${bookingDetails.nic}`, 80, 85);
+
     doc.text(`Contact Number`, 20, 95);
-    doc.text(`:    ${bookingDetails.contactNumber}`, 60, 95);
+    doc.text(`: ${bookingDetails.contactNumber}`, 80, 95);
+
     doc.text(`Email`, 20, 105);
-    doc.text(`:    ${bookingDetails.email}`, 60, 105);
-    doc.text(`Payment Time`, 20, 115);
-    doc.text(`:    ${bookingDetails.email}`, 60, 115);
-    doc.text(`Payment Method`, 20, 125);
-    doc.text(`:    Bank Transfer`, 60, 125);
+    doc.text(`: ${bookingDetails.email}`, 80, 105);
+
+    doc.text(`Address`, 20, 115);
+    doc.text(`: ${bookingDetails.address}`, 80, 115);
+
+    // Appointment Details
+    doc.text(`Doctor Name`, 20, 125);
+    doc.text(`: ${bookingDetails.doctorName}`, 80, 125);
+
+    doc.text(`Schedule Date`, 20, 135);
+    doc.text(`: ${bookingDetails.scheduleDate}`, 80, 135);
+
+    doc.text(`Schedule Day of Week`, 20, 145);
+    doc.text(`: ${bookingDetails.scheduleDayOfWeek}`, 80, 145);
+
+    doc.text(`Schedule Start Time`, 20, 155);
+    doc.text(`: ${bookingDetails.scheduleStartTime}`, 80, 155);
+
+    doc.text(`Appointment Number`, 20, 165);
+    doc.text(`: ${bookingDetails.appointmentNumber}`, 80, 165);
+
+    // Payment Details
+    doc.text(`Payment Date`, 20, 175);
+    doc.text(`: ${bookingDetails.date}`, 80, 175);
+
+    doc.text(`Payment Time`, 20, 185);
+    doc.text(`: ${bookingDetails.createdAt}`, 80, 185);
+
+    doc.text(`Payment Method`, 20, 195);
+    doc.text(`: Bank Transfer`, 80, 195);
+
+    doc.setFillColor(0, 126, 133); // Teal color
+    doc.rect(0, 285, 210, 300, "F"); // Rectangle width adjusted for A4 size paper
+
+    doc.setTextColor(0, 126, 133);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(
+      "Terms and Conditions: https://www.DNDental clinic.com/ntmi-terms-and-conditions",
+      105,
+      280,
+      { align: "center" }
+    );
+    doc.setTextColor(255, 255, 255);
+    doc.text("Wishing you Good Health!", 105, 290 + 2, { align: "center" });
+
+    // Save PDF
+    doc.save("receipt.pdf");
     // doc.text(`Schedule Date`, 20, 135);
     // doc.text(`:    ${bookingDetails.schedule.date}`, 60, 135);
-    doc.save("booking_confirmation.pdf");
   };
 
   // Handle input changes for each field
@@ -140,8 +188,8 @@ export default function MyBookingPage() {
         const response = await axiosInstance.get(
           `/bookings/${referenceNumber}/${phone}`
         );
-
         setResponseData(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         setErrors({
@@ -250,12 +298,6 @@ export default function MyBookingPage() {
                 <div className="text-gray-500">Email</div>
                 <div className="text-black font-semibold">
                   {responseData.email}
-                </div>
-              </li>
-              <li className="flex justify-between">
-                <div className="text-gray-500">Payment Time</div>
-                <div className="text-black font-semibold">
-                  {responseData.dateTime}
                 </div>
               </li>
               <li className="flex justify-between">

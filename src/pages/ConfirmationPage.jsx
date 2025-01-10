@@ -27,7 +27,6 @@ export default function ConfirmationPage() {
         }
       } finally {
         setIsLoading(false);
-       
       }
     };
 
@@ -77,6 +76,12 @@ export default function ConfirmationPage() {
                     </div>
                   </li>
                   <li className="flex justify-between">
+                    <div className="text-gray-500">Patient Name</div>
+                    <div className="text-black font-semibold">
+                      {booking.name}
+                    </div>
+                  </li>
+                  <li className="flex justify-between">
                     <div className="text-gray-500">NIC</div>
                     <div className="text-black font-semibold">
                       {booking.nic}
@@ -88,27 +93,31 @@ export default function ConfirmationPage() {
                       {booking.contactNumber}
                     </div>
                   </li>
+
                   <li className="flex justify-between">
-                    <div className="text-gray-500">Payment Time</div>
+                    <div className="text-gray-500">Doctor's Name</div>
                     <div className="text-black font-semibold">
-                      {booking.dateTime}
+                      {booking.doctorName}
+                    </div>
+                  </li>
+
+                  <li className="flex justify-between">
+                    <div className="text-gray-500">Schedule Date </div>
+                    <div className="text-black font-semibold">
+                      {booking.scheduleDate}
                     </div>
                   </li>
                   <li className="flex justify-between">
-                    <div className="text-gray-500">Payment Method</div>
+                    <div className="text-gray-500">Schedule Time </div>
                     <div className="text-black font-semibold">
-                      Bank Transfer
+                      {booking.scheduleStartTime}
                     </div>
                   </li>
                   <li className="flex justify-between">
-                    <div className="text-gray-500">Sender Name</div>
+                    <div className="text-gray-500">Appoinment Number </div>
                     <div className="text-black font-semibold">
-                      {booking.name}
+                      {booking.appointmentNumber}
                     </div>
-                  </li>
-                  <li className="flex justify-between">
-                    <div className="text-gray-500">Ref Number</div>
-                    <div className="text-black font-semibold">000085752257</div>
                   </li>
                 </ul>
               </div>
